@@ -1,3 +1,3 @@
-[submodule "afi-manager-base-model"]
-	path = afi-manager-base-model
+[submodule "src/afi-manager-base-model"]
+	path = src/afi-manager-base-model
 	url = https://github.com/luongdeveloper/afi-manager-base-model.git
