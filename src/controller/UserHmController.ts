@@ -1,5 +1,5 @@
-import { OrderTracking } from "../../afi-manager-base-model/model/OrderTracking";
-import { UserHm } from "../../afi-manager-base-model/model/UserHm";
+import { OrderTracking } from "../afi-manager-base-model/model/OrderTracking";
+import { UserHm } from "../afi-manager-base-model/model/UserHm";
 import { BaseController } from "./BaseController";
 
 export class UserHmController extends BaseController<UserHm> {

@@ -1,4 +1,4 @@
-import { OrderTracking } from "../afi-manager-base-model/model/OrderTracking";
+import { OrderTracking } from "./afi-manager-base-model/model/OrderTracking";
 import puppeteer from "puppeteer";
 import { userHmController } from "./controller";
 import { UserHmController } from "./controller/UserHmController";
@@ -11,9 +11,10 @@ const register = async (params: OrderTracking[]) => {
 
     const navigationPromise = page.waitForNavigation();
     let indexNext = 1;
+    const text = Math.random().toString(36).slice(-4);
     for await (const order of params) {
         indexNext++;
-        order.email = `te1st${indexNext}${order.userHM.username}`;
+        order.email = `${text}afi${indexNext}${order.userHM.username}`;
         await page.goto("https://www2.hm.com/en_gb/logout");
 
         await page.goto("https://www2.hm.com/en_gb/register");

@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 import { orderTrackingController, userHmController } from "./controller";
-import { UserHm } from "../afi-manager-base-model/model/UserHm";
+import { UserHm } from "./afi-manager-base-model/model/UserHm";
 const loginAndGetCart = async (
     params: UserHm[],
     browser: puppeteer.Browser
@@ -141,12 +141,16 @@ const loginAndGetCart = async (
                         for (let i = 0; i < quantity; i++) {
                             if (code) {
                                 cart.push({
-                                    productId: code,
-                                    size,
-                                    price: price || originPrice,
-                                    originPrice,
-                                    buyPrice,
-                                    userId: params?.infoUser.id,
+                                    productOrder: [
+                                        {
+                                            productId: code,
+                                            size,
+                                            price: price || originPrice,
+                                            originPrice,
+                                            buyPrice,
+                                        },
+                                    ],
+                                    userHMId: params?.infoUser.id,
                                 });
                             }
                         }
@@ -165,7 +169,7 @@ const loginAndGetCart = async (
                                     "Content-Type": "application/json",
                                 },
                                 body: JSON.stringify({
-                                    cart,
+                                    data: cart,
                                 }),
                             }
                         ).then((rawResponse) => {
