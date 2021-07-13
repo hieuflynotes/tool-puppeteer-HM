@@ -1,20 +1,18 @@
-import { OrderTracking } from "./afi-manager-base-model/model/OrderTracking";
+import { OrderTracking } from "../afi-manager-base-model/model/OrderTracking";
 import puppeteer from "puppeteer";
-import { userHmController } from "./controller";
-import { UserHmController } from "./controller/UserHmController";
+import { userHmController } from "../controller";
+import { UserHmController } from "../controller/UserHmController";
+import { getBrowser } from ".";
 
 const register = async (params: OrderTracking[]) => {
-    const browser = await puppeteer.launch({
-        headless: false,
-    });
+    const browser = await getBrowser();
     const page = await browser.newPage();
-
     const navigationPromise = page.waitForNavigation();
     let indexNext = 1;
     const text = Math.random().toString(36).slice(-4);
     for await (const order of params) {
         indexNext++;
-        order.email = `${text}afi${indexNext}${order.userHM.username}`;
+        order.email = `${text}${indexNext}-${order.userHM.username}`;
         await page.goto("https://www2.hm.com/en_gb/logout");
 
         await page.goto("https://www2.hm.com/en_gb/register");
@@ -73,8 +71,6 @@ const register = async (params: OrderTracking[]) => {
             "2001"
         );
 
-        console.log("74");
-
         await page.waitForSelector(
             "form > div.Accordion-module--container__QC8bm > div > button"
         );
@@ -82,31 +78,23 @@ const register = async (params: OrderTracking[]) => {
             "form > div.Accordion-module--container__QC8bm > div > button"
         );
 
-        console.log("79");
-
         await page.waitForSelector(
             ".RegisterForm--optionalFields__1NuGM #firstName"
         );
-        console.log("85");
         await page.click(".RegisterForm--optionalFields__1NuGM #firstName");
         await page.type(
             ".RegisterForm--optionalFields__1NuGM #firstName",
             order.userHM.firstName
         );
 
-        console.log("92");
-
         await page.waitForSelector(
             ".RegisterForm--optionalFields__1NuGM #lastName"
         );
-        console.log("97");
         await page.click(".RegisterForm--optionalFields__1NuGM #lastName");
         await page.type(
             ".RegisterForm--optionalFields__1NuGM #lastName",
             order.userHM.lastName
         );
-
-        console.log("98");
 
         await page.waitForSelector(
             ".RegisterForm--optionalFields__1NuGM #gender"
@@ -123,7 +111,6 @@ const register = async (params: OrderTracking[]) => {
         );
         await page.click(".RegisterForm--optionalFields__1NuGM #gender");
 
-        console.log("116");
         await page.waitForSelector(
             ".RegisterForm--optionalFields__1NuGM #postalCode"
         );
@@ -155,7 +142,7 @@ const register = async (params: OrderTracking[]) => {
         console.log(newOrder);
         console.log("-----------------------------");
     }
-    // await page.close();
+    await browser.close();
 };
 
 // register({

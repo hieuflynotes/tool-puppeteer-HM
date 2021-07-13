@@ -1,6 +1,8 @@
 import puppeteer from "puppeteer";
-import { orderTrackingController, userHmController } from "./controller";
-import { UserHm } from "./afi-manager-base-model/model/UserHm";
+import { orderTrackingController, userHmController } from "../controller";
+import { UserHm } from "../afi-manager-base-model/model/UserHm";
+import { loginAction } from "./LoginAction";
+import { getBrowser } from ".";
 const loginAndGetCart = async (
     params: UserHm[],
     browser: puppeteer.Browser
@@ -8,41 +10,16 @@ const loginAndGetCart = async (
     return (async () => {
         const page = await browser.newPage();
         const navigationPromise = page.waitForNavigation();
+        await page.setViewport({ width: 1920, height: 949 });
 
         for (const user of params) {
-            await page.goto("https://www2.hm.com/en_gb/logout");
-            await page.goto("https://www2.hm.com/en_gb/login?logout=true");
-
-            await page.setViewport({ width: 1920, height: 949 });
-            await page.click("body");
-            await page.waitForSelector("form #email");
-            await page.click("form #email");
-            await page.type("form #email", user.username);
-
-            await page.waitForSelector("form #password");
-            await page.click("form #password");
-            await page.type("form #password", user.password);
-
-            await page.waitForSelector(
-                "#app > .Container-module--container__3vaRh > form > .CTA-module--action__3hGPH > span"
+            await loginAction(
+                {
+                    password: user.password,
+                    username: user.username,
+                },
+                page
             );
-            await page.click(
-                "#app > .Container-module--container__3vaRh > form > .CTA-module--action__3hGPH > span"
-            );
-
-            await navigationPromise;
-
-            try {
-                await page.waitForSelector(
-                    ".UserMenu--userMenuWrapper__2TNHh:nth-child(2) > nav > .UserMenu-module--ul__FZ9hS > .UserMenu-module--li__jnU4m:nth-child(1) > .CTA-module--action__3hGPH"
-                );
-                await page.click(
-                    ".UserMenu--userMenuWrapper__2TNHh:nth-child(2) > nav > .UserMenu-module--ul__FZ9hS > .UserMenu-module--li__jnU4m:nth-child(1) > .CTA-module--action__3hGPH"
-                );
-            } catch (error) {
-                // todo : send not
-                break;
-            }
 
             await navigationPromise;
 
@@ -62,6 +39,13 @@ const loginAndGetCart = async (
 
             await page.evaluate(
                 (params: { infoUser; orderTrackingController }) => {
+                    if (
+                        document.querySelector(
+                            "#sidebar-sticky-boundary > div > div > h2"
+                        )
+                    ) {
+                        return;
+                    }
                     const e = document.querySelector(
                         ".CartItemsList--list__2ECvP"
                     );
@@ -122,6 +106,11 @@ const loginAndGetCart = async (
                         let size = nodeSize
                             ? nodeSize.innerHTML.replace("Few pieces left", "")
                             : "";
+                        const indexOfSpan = size.indexOf("<");
+                        if (indexOfSpan > 0) {
+                            size = size.substring(0, indexOfSpan);
+                        }
+
                         let originPrice = nodePriceToNumber(nodeOriginPrice);
                         let price = nodeSalePrice
                             ? nodePriceToNumber(nodeSalePrice)
@@ -197,6 +186,7 @@ const loginAndGetCart = async (
                 }, 6000);
             });
         }
+        await browser.close();
     })();
 };
 
@@ -209,10 +199,11 @@ async function autoCreateAccount() {
             },
         })
         .then(async (res) => {
-            const browser = await puppeteer.launch({
-                headless: false,
-                devtools: true,
-            });
-            await loginAndGetCart(res, browser);
+            console.log(res);
+            if (res.length > 0) {
+                await loginAndGetCart(res, await getBrowser());
+            } else {
+                console.log("Account need get empty");
+            }
         });
 }
