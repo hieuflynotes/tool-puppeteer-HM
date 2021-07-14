@@ -23,6 +23,8 @@ const OrderAndPayment = async (
 
         console.log("on before login");
 
+        console.log(order);
+
         for (const product of order.productOrder) {
             console.log({
                 product,
@@ -72,15 +74,15 @@ const OrderAndPayment = async (
 
         if (order.productOrder.length >= 2) {
             console.log("on product order");
-
-            let indexProductSelect = 0;
-            for (const product of order.productOrder) {
-                indexProductSelect++;
-                await page.select(
-                    `#sidebar-sticky-boundary > section.CartItemsList--wrapper__2l3t1 > div > ul > li:nth-child(${indexProductSelect}) > article > div.Actions-module--actions__1S8Uk > div > div > div > select`,
-                    product?.quantity?.toString() || "1"
-                );
-            }
+            await page.waitForTimeout(5000);
+            // let indexProductSelect = 0;
+            // for (const product of order.productOrder) {
+            //     indexProductSelect++;
+            //     await page.select(
+            //         `#sidebar-sticky-boundary > section.CartItemsList--wrapper__2l3t1 > div > ul > li:nth-child(${indexProductSelect}) > article > div.Actions-module--actions__1S8Uk > div > div > div > select`,
+            //         product?.quantity?.toString() || "1"
+            //     );
+            // }
         } else {
             console.log("on product order 121");
             await page.select(
@@ -101,10 +103,10 @@ const OrderAndPayment = async (
         await page.type("#line1", order.userHM.address);
 
         await page.waitForSelector("#line2");
-        await page.type("#line2", order.userHM.address);
+        await page.type("#line2", order.userHM.address2);
 
         await page.waitForSelector("#town");
-        await page.type("#town", "London");
+        await page.type("#town", order.userHM.town);
 
         await page.waitForSelector("#postalCode");
         await page.type("#postalCode", order.userHM.postcode);
