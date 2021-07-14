@@ -138,7 +138,7 @@ const OrderAndPayment = async (
         );
         const newOrder = await userHmController.updateOrder({
             ...order,
-            orderId: "1",
+            isOrder: true,
         });
         console.log(newOrder);
     }
@@ -147,13 +147,18 @@ const OrderAndPayment = async (
 
 autoPayment();
 async function autoPayment() {
-    userHmController.getOrderIsNotCreateFromTool().then(async (res) => {
-        console.log(res);
+    userHmController
+        .getOrderIsNotCreateFromTool()
+        .then(async (res) => {
+            console.log(res);
 
-        if (res.length > 0) {
-            await OrderAndPayment(res, await getBrowser());
-        } else {
-            console.log("Khong co order de tao");
-        }
-    });
+            if (res.length > 0) {
+                await OrderAndPayment(res, await getBrowser());
+            } else {
+                console.log("Khong co order de tao");
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 }
