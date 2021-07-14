@@ -137,6 +137,7 @@ const loginAndGetCart = async (
                                             price: price || originPrice,
                                             originPrice,
                                             buyPrice,
+                                            quantity: 1,
                                         },
                                     ],
                                     userHMId: params?.infoUser.id,

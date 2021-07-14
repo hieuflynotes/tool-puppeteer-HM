@@ -9,10 +9,8 @@ const register = async (params: OrderTracking[]) => {
     const page = await browser.newPage();
     const navigationPromise = page.waitForNavigation();
     let indexNext = 1;
-    const text = Math.random().toString(36).slice(-4);
     for await (const order of params) {
         indexNext++;
-        order.email = `${text}${indexNext}-${order.userHM.username}`;
         await page.goto("https://www2.hm.com/en_gb/logout");
 
         await page.goto("https://www2.hm.com/en_gb/register");
@@ -29,7 +27,7 @@ const register = async (params: OrderTracking[]) => {
 
         await page.waitForSelector("form #password");
         await page.click("form #password");
-        await page.type("form #password", "Vanluong@123"); //todo : hard code
+        await page.type("form #password", order.userHM.password); //todo : hard code
 
         await page.waitForSelector("form #dateOfBirth");
         await page.click("form #dateOfBirth");
@@ -138,24 +136,15 @@ const register = async (params: OrderTracking[]) => {
         await page.click(
             "#app > .Container-module--container__3vaRh > .ModalButtons-module--container__1ODer > .ModalButtons-module--buttonHolder__2D5GP > .CTA-module--secondary__3w4kI"
         );
-        const newOrder = await userHmController.updateOrder(order);
+        const newOrder = await userHmController.updateOrder({
+            ...order,
+            isRegister: true,
+        });
         console.log(newOrder);
         console.log("-----------------------------");
     }
     await browser.close();
 };
-
-// register({
-//   address: "21 Luong The Vinh",
-//   firstName: 'Luong',
-//   lastName: 'Nguyen',
-//   password: 'Vanluong@123',
-//   phone: '+447438233862',
-//   note: 'orderauthentic.9x+00492@gmail.com',
-//   postcode: 'N99LN',
-//   town: 'London',
-//   username : 'Nguyenngockhanhan2019@gmail.com'
-// })
 
 autoCreateAccount();
 async function autoCreateAccount() {

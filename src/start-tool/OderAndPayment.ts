@@ -12,17 +12,16 @@ const OrderAndPayment = async (
     const page = await browser.newPage();
     const navigationPromise = page.waitForNavigation();
 
-    await page.setViewport({ width: 1920, height: 1080 });
     for (const order of params) {
-        await navigationPromise;
-
         await loginAction(
             {
                 username: order.email,
-                password: "Vanluong@123",
+                password: order.userHM.password,
             },
             page
         );
+
+        console.log("on before login");
 
         for (const product of order.productOrder) {
             console.log({
@@ -67,18 +66,26 @@ const OrderAndPayment = async (
 
         await navigationPromise;
 
-        page.goto("https://www2.hm.com/en_gb/cart");
-
-        await page.waitForRequest("https://ct.pinterest.com/md/");
+        await page.goto("https://www2.hm.com/en_gb/cart");
 
         await page.waitForTimeout(2000);
 
-        let indexProductSelect = 0;
-        for (const product of order.productOrder) {
-            indexProductSelect++;
+        if (order.productOrder.length >= 2) {
+            console.log("on product order");
+
+            let indexProductSelect = 0;
+            for (const product of order.productOrder) {
+                indexProductSelect++;
+                await page.select(
+                    `#sidebar-sticky-boundary > section.CartItemsList--wrapper__2l3t1 > div > ul > li:nth-child(${indexProductSelect}) > article > div.Actions-module--actions__1S8Uk > div > div > div > select`,
+                    product?.quantity?.toString() || "1"
+                );
+            }
+        } else {
+            console.log("on product order 121");
             await page.select(
-                `#sidebar-sticky-boundary > section.CartItemsList--wrapper__2l3t1 > div > ul > li:nth-child(${indexProductSelect}) > article > div.Actions-module--actions__1S8Uk > div > div > div > select`,
-                "1"
+                `#sidebar-sticky-boundary > section.CartItemsList--wrapper__2l3t1 > div > ul > li > article > div.Actions-module--actions__1S8Uk > div > div > div > select`,
+                order?.productOrder[0]?.quantity?.toString() || "1"
             );
         }
 
@@ -102,6 +109,33 @@ const OrderAndPayment = async (
         await page.waitForSelector("#postalCode");
         await page.type("#postalCode", order.userHM.postcode);
 
+        await page.waitForSelector(
+            "#app > div > main > div > div:nth-child(1) > section:nth-child(2) > div > div > div > div > form > div > div.CheckoutForm--buttonContainer__k6rcy > button"
+        );
+        await page.click(
+            "#app > div > main > div > div:nth-child(1) > section:nth-child(2) > div > div > div > div > form > div > div.CheckoutForm--buttonContainer__k6rcy > button"
+        );
+        await page.waitForSelector("#phoneNumber");
+        await page.focus("#phoneNumber");
+        await page.keyboard.down("Control");
+        await page.keyboard.press("A");
+        await page.keyboard.up("Control");
+        await page.keyboard.press("Backspace");
+        await page.type("#phoneNumber", order.userHM.phone);
+        await page.waitForSelector(
+            "#app > div > main > div > div:nth-child(1) > section:nth-child(3) > div > div > div > div > form > div.CheckoutForm--buttonContainer__k6rcy > button"
+        );
+        await page.click(
+            "#app > div > main > div > div:nth-child(1) > section:nth-child(3) > div > div > div > div > form > div.CheckoutForm--buttonContainer__k6rcy > button"
+        );
+        await page.click(
+            "#app > div > main > div > div:nth-child(1) > section:nth-child(3) > div > div > div > div > form > div.CheckoutForm--buttonContainer__k6rcy > button"
+        );
+
+        await page.waitForTimeout(5000);
+        await page.waitForSelector(
+            "#adyen_form_id > div.CheckoutForm--buttonContainer__k6rcy > button"
+        );
         const newOrder = await userHmController.updateOrder({
             ...order,
             orderId: "1",
