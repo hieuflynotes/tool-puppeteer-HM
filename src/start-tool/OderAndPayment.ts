@@ -84,7 +84,6 @@ const OrderAndPayment = async (
             //     );
             // }
         } else {
-            console.log("on product order 121");
             await page.select(
                 `#sidebar-sticky-boundary > section.CartItemsList--wrapper__2l3t1 > div > ul > li > article > div.Actions-module--actions__1S8Uk > div > div > div > select`,
                 order?.productOrder[0]?.quantity?.toString() || "1"
@@ -125,6 +124,9 @@ const OrderAndPayment = async (
         await page.keyboard.press("Backspace");
         await page.type("#phoneNumber", order.userHM.phone);
         await page.waitForSelector(
+            "#app > div > main > div > div:nth-child(1) > section:nth-child(3) > div > div > div > div > form > div.CheckoutForm--buttonContainer__k6rcy > button"
+        );
+        await page.click(
             "#app > div > main > div > div:nth-child(1) > section:nth-child(3) > div > div > div > div > form > div.CheckoutForm--buttonContainer__k6rcy > button"
         );
         await page.click(
