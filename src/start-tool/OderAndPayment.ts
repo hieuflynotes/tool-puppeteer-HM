@@ -11,7 +11,6 @@ const OrderAndPayment = async (
 ) => {
     const page = await browser.newPage();
     const client = await page.target().createCDPSession();
-
     await client.send("Network.setCacheDisabled", {
         cacheDisabled: true,
     });
@@ -103,7 +102,7 @@ const OrderAndPayment = async (
         await page.click(
             `#sidebar-sticky-boundary > section.CartSidebar--wrapper__2D7xe.CartSidebar--reactCheckoutEnabledUpdatedSidebar__JyGkt > div > div > div.CartSidebar--sidebarContent__3nsmD.CartSidebar--isNotCompressedSidebar__1l9b2 > div.CartSidebar--continue__2L8c_ > button`
         );
-        await page.waitForTimeout(2000);
+        await page.waitForTimeout(3000);
         await page.goto("https://www2.hm.com/en_gb/checkout-r");
         await page.waitForSelector("#line1");
         await page.type("#line1", order.userHM.address);

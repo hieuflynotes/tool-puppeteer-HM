@@ -7,14 +7,16 @@ export const loginAction = async (
 ) => {
     await page.deleteCookie();
 
+    await page.goto("https://www2.hm.com/en_gb/logout");
     try {
         await page.$eval("#onetrust-accept-btn-handler", (e) => {
+            sessionStorage.clear();
+            localStorage.clear();
             if (e) {
                 (e as any).click();
             }
         });
     } catch (error) {}
-    await page.goto("https://www2.hm.com/en_gb/logout");
 
     await page.waitForSelector("form #email");
     await page.click("form #email");
