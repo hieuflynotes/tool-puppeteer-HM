@@ -11,6 +11,12 @@ const loginAndGetCart = async (
         const page = await browser.newPage();
         const navigationPromise = page.waitForNavigation();
         await page.setViewport({ width: 1920, height: 949 });
+        const client = await page.target().createCDPSession();
+
+        await client.send("Network.setCacheDisabled", {
+            cacheDisabled: true,
+        });
+        await page.reload({ waitUntil: "networkidle2" });
 
         for (const user of params) {
             await loginAction(

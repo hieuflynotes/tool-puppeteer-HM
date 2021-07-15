@@ -8,6 +8,12 @@ const register = async (params: OrderTracking[]) => {
     const browser = await getBrowser();
     const page = await browser.newPage();
     const navigationPromise = page.waitForNavigation();
+    const client = await page.target().createCDPSession();
+
+    await client.send("Network.setCacheDisabled", {
+        cacheDisabled: true,
+    });
+    await page.reload({ waitUntil: "networkidle2" });
     let indexNext = 1;
     for await (const order of params) {
         indexNext++;
