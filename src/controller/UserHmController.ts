@@ -3,20 +3,30 @@ import { UserHm } from "../afi-manager-base-model/model/UserHm";
 import { BaseController } from "./BaseController";
 
 export class UserHmController extends BaseController<UserHm> {
-    getOrderIsNotRegisterAccountFromTool(): Promise<OrderTracking[]> {
+    getOrderIsNotRegisterAccountFromTool(params: {
+        email: string;
+    }): Promise<OrderTracking[]> {
         return this.client
             .get(
-                `${this.serviceURL}/${this.basePath}/get-order-is-not-register-from-tool`
+                `${this.serviceURL}/${this.basePath}/get-order-is-not-register-from-tool`,
+                {
+                    params,
+                }
             )
             .then((res) => {
                 return res.data;
             });
     }
 
-    getOrderIsNotCreateFromTool(): Promise<OrderTracking[]> {
+    getOrderIsNotCreateFromTool(params: {
+        email: string;
+    }): Promise<OrderTracking[]> {
         return this.client
             .get(
-                `${this.serviceURL}/${this.basePath}/get-order-is-not-create-from-tool`
+                `${this.serviceURL}/${this.basePath}/get-order-is-not-create-from-tool`,
+                {
+                    params,
+                }
             )
             .then((res) => {
                 return res.data;

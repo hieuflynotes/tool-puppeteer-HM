@@ -2,7 +2,7 @@ import { OrderTracking } from "../afi-manager-base-model/model/OrderTracking";
 import puppeteer from "puppeteer";
 import { userHmController } from "../controller";
 import { UserHmController } from "../controller/UserHmController";
-import { getBrowser } from ".";
+import { emailConfig, getBrowser } from ".";
 
 const register = async (params: OrderTracking[]) => {
     const browser = await getBrowser();
@@ -148,13 +148,17 @@ const register = async (params: OrderTracking[]) => {
 
 autoCreateAccount();
 async function autoCreateAccount() {
-    userHmController.getOrderIsNotRegisterAccountFromTool().then((res) => {
-        console.log(res);
+    userHmController
+        .getOrderIsNotRegisterAccountFromTool({
+            email: emailConfig,
+        })
+        .then((res) => {
+            console.log(res);
 
-        if (res.length > 0) {
-            register(res);
-        } else {
-            console.log("Khong co account de tao");
-        }
-    });
+            if (res.length > 0) {
+                register(res);
+            } else {
+                console.log("Khong co account de tao");
+            }
+        });
 }

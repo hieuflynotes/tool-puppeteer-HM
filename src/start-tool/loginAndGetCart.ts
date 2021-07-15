@@ -2,7 +2,7 @@ import puppeteer from "puppeteer";
 import { orderTrackingController, userHmController } from "../controller";
 import { UserHm } from "../afi-manager-base-model/model/UserHm";
 import { loginAction } from "./LoginAction";
-import { getBrowser } from ".";
+import { emailConfig, getBrowser } from ".";
 const loginAndGetCart = async (
     params: UserHm[],
     browser: puppeteer.Browser
@@ -197,6 +197,7 @@ async function autoCreateAccount() {
         .find({
             filter: {
                 isDone: false,
+                username: emailConfig,
             },
         })
         .then(async (res) => {

@@ -3,7 +3,7 @@ import { orderTrackingController, userHmController } from "../controller";
 import { UserHm } from "../afi-manager-base-model/model/UserHm";
 import { OrderTracking } from "../afi-manager-base-model/model/OrderTracking";
 import { loginAction } from "./LoginAction";
-import { getBrowser } from ".";
+import { emailConfig, getBrowser } from ".";
 
 const OrderAndPayment = async (
     params: OrderTracking[],
@@ -152,10 +152,8 @@ const OrderAndPayment = async (
 autoPayment();
 async function autoPayment() {
     userHmController
-        .getOrderIsNotCreateFromTool()
+        .getOrderIsNotCreateFromTool({ email: emailConfig })
         .then(async (res) => {
-            console.log(res);
-
             if (res.length > 0) {
                 await OrderAndPayment(res, await getBrowser());
             } else {

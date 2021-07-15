@@ -11,3 +11,5 @@ export async function getBrowser() {
     });
     return browser;
 }
+
+export const emailConfig = "tuonghoa2771994+29@gmail.com";
