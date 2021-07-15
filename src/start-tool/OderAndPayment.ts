@@ -9,12 +9,12 @@ const OrderAndPayment = async (
     params: OrderTracking[],
     browser: puppeteer.Browser
 ) => {
-    const page = await browser.newPage();
-    const client = await page.target().createCDPSession();
+    const page = await browser.newPage()
+    // const client = await page.target().createCDPSession();
 
-    await client.send("Network.setCacheDisabled", {
-        cacheDisabled: true,
-    });
+    // await client.send("Network.setCacheDisabled", {
+    //     cacheDisabled: true,
+    // });
     await page.reload({ waitUntil: "networkidle2" });
 
     const navigationPromise = page.waitForNavigation();

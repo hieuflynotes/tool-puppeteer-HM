@@ -14,6 +14,7 @@ export const loginAction = async (
             }
         });
     } catch (error) {}
+
     await page.goto("https://www2.hm.com/en_gb/logout");
 
     await page.waitForSelector("form #email");

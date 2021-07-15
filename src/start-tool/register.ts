@@ -31,6 +31,8 @@ const register = async (params: OrderTracking[]) => {
         await page.click("form #email");
         await page.type("form #email", order.email);
 
+        await page.waitForTimeout(400)
+
         await page.waitForSelector("form #password");
         await page.click("form #password");
         await page.type("form #password", order.userHM.password); //todo : hard code
