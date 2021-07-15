@@ -3,6 +3,7 @@ import puppeteer from "puppeteer";
 export async function getBrowser() {
     const browser = await puppeteer.launch({
         headless: false,
+        executablePath: "/opt/google/chrome/google-chrome",
         // devtools: true,
         defaultViewport: {
             height: 1080,
@@ -12,4 +13,4 @@ export async function getBrowser() {
     return browser;
 }
 
-export const emailConfig = "Phamthuhuong308+101@gmail.com";
+export const emailConfig = "Lannguyen220419+20@gmail.com";

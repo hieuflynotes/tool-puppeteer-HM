@@ -5,22 +5,32 @@ export const loginAction = async (
     params: { username: string; password: string },
     page: puppeteer.Page
 ) => {
-    await page.deleteCookie();
+    // await page.deleteCookie();
 
     await page.goto("https://www2.hm.com/en_gb/logout");
+
+    await page.goto("https://www2.hm.com/en_gb/login");
+
     try {
-        await page.$eval("#onetrust-accept-btn-handler", (e) => {
+        await page.evaluate(() => {
+            let e = document.querySelector("#onetrust-accept-btn-handler");
             sessionStorage.clear();
             localStorage.clear();
+            document.cookie.split(";").forEach(function (c) {
+                document.cookie = c
+                    .replace(/^ +/, "")
+                    .replace(
+                        /=.*/,
+                        "=;expires=" + new Date().toUTCString() + ";path=/"
+                    );
+            });
+
             if (e) {
                 (e as any).click();
             }
         });
     } catch (error) {}
-
-    await page.waitForTimeout(1000);
-
-    await page.goto("https://www2.hm.com/en_gb/logout");
+    await page.waitForTimeout(200);
 
     await page.waitForSelector("form #email");
     await page.click("form #email");
