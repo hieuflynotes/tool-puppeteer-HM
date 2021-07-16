@@ -19,6 +19,7 @@ const OrderAndPayment = async (
     const navigationPromise = page.waitForNavigation();
 
     for (const order of params) {
+        let isErrorSize = false;
         await loginAction(
             {
                 username: order.email,
@@ -55,15 +56,22 @@ const OrderAndPayment = async (
                     item.setAttribute("size", item.textContent);
                 });
             });
+            await page.waitForTimeout(100);
 
             await page.waitForSelector(
                 "#picker-1 > ul > li > div > button > span"
             );
             if (product.size == "NOSIZE") {
             } else {
-                await page.click(
-                    `#picker-1 > ul > li > div > button > span[size='${product.size}']`
-                );
+                try {
+                    await page.click(
+                        `#picker-1 > ul > li > div > button > span[size='${product.size}']`
+                    );
+                } catch (error) {
+                    isErrorSize = true;
+                    console.log("on lỗi size");
+                    break;
+                }
             }
 
             await page.waitForSelector(
@@ -73,6 +81,14 @@ const OrderAndPayment = async (
                 "#main-content > div.product.parbase > div.layout.pdp-wrapper.product-detail.sticky-footer-wrapper.js-reviews > div.module.product-description.sticky-wrapper > div.sub-content.product-detail-info.product-detail-meta.inner.sticky-on-scroll.semi-sticky > div > div.product-item-buttons > div.product-button-wrapper > button"
             );
             await page.waitForTimeout(1000);
+        }
+        if (isErrorSize) {
+            const newOrder = await userHmController.updateOrder({
+                ...order,
+                isOrder: false,
+                errorDesc: "Hết size",
+            });
+            continue;
         }
 
         await navigationPromise;
@@ -105,8 +121,10 @@ const OrderAndPayment = async (
         await page.click(
             `#sidebar-sticky-boundary > section.CartSidebar--wrapper__2D7xe.CartSidebar--reactCheckoutEnabledUpdatedSidebar__JyGkt > div > div > div.CartSidebar--sidebarContent__3nsmD.CartSidebar--isNotCompressedSidebar__1l9b2 > div.CartSidebar--continue__2L8c_ > button`
         );
+        await page.click(
+            `#sidebar-sticky-boundary > section.CartSidebar--wrapper__2D7xe.CartSidebar--reactCheckoutEnabledUpdatedSidebar__JyGkt > div > div > div.CartSidebar--sidebarContent__3nsmD.CartSidebar--isNotCompressedSidebar__1l9b2 > div.CartSidebar--continue__2L8c_ > button`
+        );
         await page.waitForTimeout(3000);
-        await page.goto("https://www2.hm.com/en_gb/checkout-r");
         await page.waitForSelector("#line1");
         await page.type("#line1", order.userHM.address);
 
