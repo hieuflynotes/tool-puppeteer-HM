@@ -38,14 +38,22 @@ const register = async (params: OrderTracking[]) => {
                 }
             });
         } catch (error) {}
-        await page.waitForSelector("form #email");
-        await page.click("form #email");
-        await page.type("form #email", order.email);
 
-        await page.waitForTimeout(400)
+        await page.waitForSelector("form #email");
+        page.evaluate(
+            (params: { userName }) => {
+                let node: any = document.getElementById("email");
+                node.value = params.userName;
+            },
+            {
+                userName: order.email,
+            }
+        );
+        await page.focus("form #email");
+        await page.type("form #email", " ");
 
         await page.waitForSelector("form #password");
-        await page.click("form #password");
+        await page.focus("form #password");
         await page.type("form #password", order.userHM.password); //todo : hard code
 
         await page.waitForSelector("form #dateOfBirth");

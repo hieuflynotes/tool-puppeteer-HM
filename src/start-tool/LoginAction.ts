@@ -31,10 +31,19 @@ export const loginAction = async (
         });
     } catch (error) {}
     await page.waitForTimeout(200);
-    
+
     await page.waitForSelector("form #email");
+    page.evaluate(
+        (params: { userName }) => {
+            let node: any = document.getElementById("email");
+            node.value = params.userName;
+        },
+        {
+            userName: params.username,
+        }
+    );
     await page.focus("form #email");
-    await page.type("form #email", params.username);
+    await page.type("form #email", " ");
     await page.waitForTimeout(500);
 
     await page.waitForSelector("form #password");
