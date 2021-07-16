@@ -9,8 +9,6 @@ export const loginAction = async (
 
     await page.goto("https://www2.hm.com/en_gb/logout");
 
-    await page.goto("https://www2.hm.com/en_gb/login");
-
     try {
         await page.evaluate(() => {
             let e = document.querySelector("#onetrust-accept-btn-handler");

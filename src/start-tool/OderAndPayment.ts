@@ -27,10 +27,14 @@ const OrderAndPayment = async (
             },
             page
         );
+        console.log("------action with------");
+        console.log({
+            id: order.id,
+            email: order.email,
+            product: order.productOrder
+        });
 
-        console.log("on before login");
 
-        console.log(order);
 
         for (const product of order.productOrder) {
             console.log({
@@ -50,12 +54,12 @@ const OrderAndPayment = async (
             //     await page.waitForSelector(selectorCheckNull)
             //     console.log("on stock");
             //     await page.waitForTimeout(20000)
-                
+
             //     errorOrder = "Out of stock";
             //     break;
             // } catch (error) {
             //     console.log("on have product");
-                
+
             // }
 
             await page.waitForSelector("#picker-1 > button");
@@ -93,7 +97,7 @@ const OrderAndPayment = async (
             await page.click(
                 "#main-content > div.product.parbase > div.layout.pdp-wrapper.product-detail.sticky-footer-wrapper.js-reviews > div.module.product-description.sticky-wrapper > div.sub-content.product-detail-info.product-detail-meta.inner.sticky-on-scroll.semi-sticky > div > div.product-item-buttons > div.product-button-wrapper > button"
             );
-            await page.waitForTimeout(1000);
+            await page.waitForTimeout(2000);
         }
         if (errorOrder) {
             const newOrder = await userHmController.updateOrder({
@@ -137,6 +141,8 @@ const OrderAndPayment = async (
         await page.click(
             `#sidebar-sticky-boundary > section.CartSidebar--wrapper__2D7xe.CartSidebar--reactCheckoutEnabledUpdatedSidebar__JyGkt > div > div > div.CartSidebar--sidebarContent__3nsmD.CartSidebar--isNotCompressedSidebar__1l9b2 > div.CartSidebar--continue__2L8c_ > button`
         );
+
+        
         await page.waitForTimeout(3000);
         await page.waitForSelector("#line1");
         await page.type("#line1", order.userHM.address);
