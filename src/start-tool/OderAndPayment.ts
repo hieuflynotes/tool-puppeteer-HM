@@ -122,6 +122,9 @@ const OrderAndPayment = async (
         await page.click(
             "#app > div > main > div > div:nth-child(1) > section:nth-child(2) > div > div > div > div > form > div > div.CheckoutForm--buttonContainer__k6rcy > button"
         );
+        await page.click(
+            "#app > div > main > div > div:nth-child(1) > section:nth-child(2) > div > div > div > div > form > div > div.CheckoutForm--buttonContainer__k6rcy > button"
+        );
         await page.waitForSelector("#phoneNumber");
         await page.focus("#phoneNumber");
         await page.keyboard.down("Control");
