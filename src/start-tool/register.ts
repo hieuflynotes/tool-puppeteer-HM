@@ -7,6 +7,16 @@ import { emailConfig, getBrowser } from ".";
 const register = async (params: OrderTracking[]) => {
     const browser = await getBrowser();
     const page = await browser.newPage();
+    await page.setViewport({ width: 1920, height: 949 });
+    // page.setRequestInterception(true);
+    // page.on('request', (req) => {
+    //     if(req.resourceType() == 'image'){
+    //     req.abort();
+    //     }
+    //     else {
+    //     req.continue();
+    //     }
+    //     });
     const navigationPromise = page.waitForNavigation();
     const client = await page.target().createCDPSession();
 
@@ -16,6 +26,7 @@ const register = async (params: OrderTracking[]) => {
     await page.reload({ waitUntil: "networkidle2" });
     let indexNext = 1;
     for await (const order of params) {
+        console.log(`resgister for  ${order.email}`);
         indexNext++;
         await page.goto("https://www2.hm.com/en_gb/logout");
 
