@@ -31,7 +31,7 @@ export const loginAction = async (
         });
     } catch (error) {}
     await page.waitForTimeout(200);
-
+    
     await page.waitForSelector("form #email");
     await page.click("form #email");
     await page.type("form #email", params.username);
@@ -39,7 +39,7 @@ export const loginAction = async (
     await page.waitForSelector("form #password");
     await page.click("form #password");
     await page.type("form #password", params.password);
-
+    await page.waitForTimeout(500);
     await page.waitForSelector(
         "#app > .Container-module--container__3vaRh > form > .CTA-module--action__3hGPH > span"
     );
