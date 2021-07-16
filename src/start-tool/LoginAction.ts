@@ -33,13 +33,12 @@ export const loginAction = async (
     await page.waitForTimeout(200);
     
     await page.waitForSelector("form #email");
-    await page.click("form #email");
+    await page.focus("form #email");
     await page.type("form #email", params.username);
-
     await page.waitForTimeout(500);
 
     await page.waitForSelector("form #password");
-    await page.click("form #password");
+    await page.focus("form #password");
     await page.type("form #password", params.password);
     await page.waitForTimeout(500);
     await page.waitForSelector(
