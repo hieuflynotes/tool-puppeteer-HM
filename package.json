@@ -8,7 +8,7 @@
         "register": "ts-node src/start-tool/register",
         "payment": "ts-node src/start-tool/OderAndPayment",
         "get-cart": "ts-node src/start-tool/loginAndGetCart",
-        "fix": "ts-node src/fix/updateOrder"
+        "fix": "ts-node src/fix/UpdateOrder"
     },
     "keywords": [],
     "author": "",

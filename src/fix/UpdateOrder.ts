@@ -1,9 +1,9 @@
-import { userHmController } from "src/controller";
+import { userHmController } from "../controller/index";
 
 async function fix() {
     userHmController.updateOrder({
-        id : "",
-        isOrder: false,
+        id : "823d43dd-641d-44f4-b61c-d350625872b6",
+        isOrder: true,
     }).then(res=>{
         console.log(res);  
     }).catch(err=>{

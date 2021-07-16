@@ -9,6 +9,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+/src/start-tool/index.ts
+
 # OS
 .DS_Store
 
