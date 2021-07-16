@@ -59,9 +59,12 @@ const OrderAndPayment = async (
             await page.waitForSelector(
                 "#picker-1 > ul > li > div > button > span"
             );
-            await page.click(
-                `#picker-1 > ul > li > div > button > span[size='${product.size}']`
-            );
+            if (product.size == "NOSIZE") {
+            } else {
+                await page.click(
+                    `#picker-1 > ul > li > div > button > span[size='${product.size}']`
+                );
+            }
 
             await page.waitForSelector(
                 "#main-content > div.product.parbase > div.layout.pdp-wrapper.product-detail.sticky-footer-wrapper.js-reviews > div.module.product-description.sticky-wrapper > div.sub-content.product-detail-info.product-detail-meta.inner.sticky-on-scroll.semi-sticky > div > div.product-item-buttons > div.product-button-wrapper > button"
@@ -161,6 +164,8 @@ async function autoPayment() {
         .getOrderIsNotCreateFromTool({ email: emailConfig })
         .then(async (res) => {
             if (res.length > 0) {
+                console.log(`Đang run (${res.length})`);
+
                 await OrderAndPayment(res, await getBrowser());
             } else {
                 console.log("Khong co order de tao");
