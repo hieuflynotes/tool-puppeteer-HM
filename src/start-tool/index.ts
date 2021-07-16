@@ -14,4 +14,4 @@ export async function getBrowser() {
 }
 
 
-export const emailConfig = "masterhmuk072021+27@gmail.com";
+export const emailConfig = "masterhmuk072021+34@gmail.com";

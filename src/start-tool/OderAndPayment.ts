@@ -19,7 +19,7 @@ const OrderAndPayment = async (
     const navigationPromise = page.waitForNavigation();
 
     for (const order of params) {
-        let isErrorSize = false;
+        let errorOrder = null;
         await loginAction(
             {
                 username: order.email,
@@ -45,6 +45,19 @@ const OrderAndPayment = async (
                 console.log(`-------------error not productId---------`);
             }
 
+            // try {
+            //     let selectorCheckNull = "#main-content > div.product.parbase > div.layout.pdp-wrapper.product-detail.sticky-footer-wrapper.js-reviews > div.module.product-description.sticky-wrapper > div.sub-content.product-detail-info.product-detail-meta.inner.sticky-on-scroll.semi-sticky > div > div.product-item-buttons > div.product-button-wrapper > button[data-sold-out-text='Out of stock']"
+            //     await page.waitForSelector(selectorCheckNull)
+            //     console.log("on stock");
+            //     await page.waitForTimeout(20000)
+                
+            //     errorOrder = "Out of stock";
+            //     break;
+            // } catch (error) {
+            //     console.log("on have product");
+                
+            // }
+
             await page.waitForSelector("#picker-1 > button");
             await page.click("#picker-1 > button");
 
@@ -68,7 +81,7 @@ const OrderAndPayment = async (
                         `#picker-1 > ul > li > div > button > span[size='${product.size}']`
                     );
                 } catch (error) {
-                    isErrorSize = true;
+                    errorOrder = `Size ${product.size} is sold out`;
                     console.log("on lỗi size");
                     break;
                 }
@@ -82,7 +95,7 @@ const OrderAndPayment = async (
             );
             await page.waitForTimeout(1000);
         }
-        if (isErrorSize) {
+        if (errorOrder) {
             const newOrder = await userHmController.updateOrder({
                 ...order,
                 isOrder: false,
