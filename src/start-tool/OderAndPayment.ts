@@ -31,10 +31,8 @@ const OrderAndPayment = async (
         console.log({
             id: order.id,
             email: order.email,
-            product: order.productOrder
+            product: order.productOrder,
         });
-
-
 
         for (const product of order.productOrder) {
             console.log({
@@ -138,10 +136,11 @@ const OrderAndPayment = async (
         await page.click(
             `#sidebar-sticky-boundary > section.CartSidebar--wrapper__2D7xe.CartSidebar--reactCheckoutEnabledUpdatedSidebar__JyGkt > div > div > div.CartSidebar--sidebarContent__3nsmD.CartSidebar--isNotCompressedSidebar__1l9b2 > div.CartSidebar--continue__2L8c_ > button`
         );
-        await page.click(
-            `#sidebar-sticky-boundary > section.CartSidebar--wrapper__2D7xe.CartSidebar--reactCheckoutEnabledUpdatedSidebar__JyGkt > div > div > div.CartSidebar--sidebarContent__3nsmD.CartSidebar--isNotCompressedSidebar__1l9b2 > div.CartSidebar--continue__2L8c_ > button`
-        );
-        
+        try {
+            await page.click(
+                `#sidebar-sticky-boundary > section.CartSidebar--wrapper__2D7xe.CartSidebar--reactCheckoutEnabledUpdatedSidebar__JyGkt > div > div > div.CartSidebar--sidebarContent__3nsmD.CartSidebar--isNotCompressedSidebar__1l9b2 > div.CartSidebar--continue__2L8c_ > button`
+            );
+        } catch (error) {}
         await page.goto("https://www2.hm.com/en_gb/checkout-r");
         await navigationPromise;
         await page.waitForTimeout(3000);

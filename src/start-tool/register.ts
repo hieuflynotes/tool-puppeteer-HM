@@ -26,7 +26,11 @@ const register = async (params: OrderTracking[]) => {
     await page.reload({ waitUntil: "networkidle2" });
     let indexNext = 1;
     for await (const order of params) {
-        console.log(`resgister for  ${order.email}`);
+        console.log(`resgister for  ---------`);
+        console.log({
+            id: order.id,
+            email: order.email,
+        });
         indexNext++;
         await page.goto("https://www2.hm.com/en_gb/logout");
 
@@ -53,7 +57,7 @@ const register = async (params: OrderTracking[]) => {
         await page.type("form #email", " ");
 
         await page.waitForSelector("form #password");
-        await page.focus("form #password");
+        await page.click("form #password");
         await page.type("form #password", order.userHM.password); //todo : hard code
 
         await page.waitForSelector("form #dateOfBirth");
